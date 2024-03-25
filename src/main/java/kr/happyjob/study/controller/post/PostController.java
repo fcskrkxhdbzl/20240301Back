@@ -21,7 +21,7 @@ public class PostController {
 
 	@PostMapping("/postDetail")
 	@ResponseBody
-	public Map<String, Object> postDetail(@RequestParam Map<String, Object> params){
+	public Map<String, Object> postDetail(@RequestParam Map<String,Object> params){
 		System.out.println("postDetail controller 에서 params 데이터 확인:"+params);
 		PostModel post = postService.postDetail(params);
 		Map<String, Object> returnMap = new HashMap<String, Object>();
