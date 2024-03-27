@@ -1,44 +1,57 @@
 package kr.happyjob.study.vo.explore;
 
 import java.util.Date;
+import java.util.List;
 
 public class ExploreModel {
 
 	 
-	private int post_no;
-	private String post_content;
-	private int user_no2;
-	private Date post_new_date;
-	private Date post_up_date;
+	private int postNo;
+	private String postContent;
+	private int userNo;
+	private Date postNewdate;
+	private Date postUpdate;
+	private List<CommentModel> commentList;
 	
-	public int getPost_no() {
-		return post_no;
+	public int getPostNo() {
+		return postNo;
 	}
-	public void setPost_no(int post_no) {
-		this.post_no = post_no;
+	public void setPostNo(int postNo) {
+		this.postNo = postNo;
 	}
-	public String getPost_content() {
-		return post_content;
+	public String getPostContent() {
+		return postContent;
 	}
-	public void setPost_content(String post_content) {
-		this.post_content = post_content;
+	public void setPostContent(String postContent) {
+		this.postContent = postContent;
 	}
-	public int getUser_no2() {
-		return user_no2;
+	public int getUserNo() {
+		return userNo;
 	}
-	public void setUser_no2(int user_no2) {
-		this.user_no2 = user_no2;
+	public void setUserNo(int userNo) {
+		this.userNo = userNo;
 	}
-	public Date getPost_new_date() {
-		return post_new_date;
+	public Date getPostNewdate() {
+		return postNewdate;
 	}
-	public void setPost_new_date(Date post_new_date) {
-		this.post_new_date = post_new_date;
+	public void setPostNewdate(Date postNewdate) {
+		this.postNewdate = postNewdate;
 	}
-	public Date getPost_up_date() {
-		return post_up_date;
+	public Date getPostUpdate() {
+		return postUpdate;
 	}
-	public void setPost_up_date(Date post_up_date) {
-		this.post_up_date = post_up_date;
+	public void setPostUpdate(Date postUpdate) {
+		this.postUpdate = postUpdate;
 	}
+	public List<CommentModel> getCommentList() {
+		return commentList;
+	}
+	public void setCommentList(List<CommentModel> commentList) {
+		this.commentList = commentList;
+	}
+	
+	
+	
+	
+	
 }

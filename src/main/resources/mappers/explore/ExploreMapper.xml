@@ -5,18 +5,40 @@
    	<!-- 추천 게시물 목록 조회 -->
 	<select id = "exploreList" parameterType="java.util.Map" resultType = "kr.happyjob.study.vo.explore.ExploreModel">
         /*kr.happyjob.study.repository.explore.ExploreMapper.exploreList*/
-		SELECT
-				p.post_no
-			,	p.user_no
-			,	DATE_FORMAT(p.post_new_date, '%Y-%m-%d')
-			,	p.post_up_date
-			,   p.post_content
+
+		 
+ 		SELECT
+				p.post_no as postNo
+			,	p.user_no as userNo
+			,	DATE_FORMAT(p.post_new_date, '%Y-%m-%d') as postNewdate
+			,	p.post_up_date as postUpdate
+			,   p.post_content as postContent
 		FROM tb_post p
 		 ORDER BY p.post_no
-		 LIMIT #{pageIndex}, #{pageSize}
+		 LIMIT 0, 10
+ 
 	</select>
 	
-   
+  	<!-- 추천 게시물 댓글 목록 조회 -->
+	<select id = "commentList" parameterType="java.lang.Integer" resultType = "kr.happyjob.study.vo.explore.CommentModel">
+        /*kr.happyjob.study.repository.explore.ExploreMapper.commentList*/
+ 	     SELECT 
+			c.comment_no as commentNo
+			, 	c.comment_content as commentContent
+			, 	c.post_no as postNo
+			, 	c.user_no as userNo
+			, 	c.comment_new_date as commentNewdate
+			, 	c.comment_up_date as commentUpdate
+      		,   u.user_id as userId
+		FROM tb_comment c	
+			INNER JOIN tb_user u on c.user_no = u.user_no
+	    WHERE c.post_no = #{postNo}
+ 
+	</select>
      
+     
+     
+     
+
      
 </mapper>

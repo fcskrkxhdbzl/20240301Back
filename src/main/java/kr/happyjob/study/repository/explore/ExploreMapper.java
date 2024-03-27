@@ -5,10 +5,12 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.happyjob.study.vo.explore.CommentModel;
 import kr.happyjob.study.vo.explore.ExploreModel;
 
 @Mapper
 public interface ExploreMapper {
 	List<ExploreModel> exploreList(Map<String, Object> param);
+	List<CommentModel> commentList(Integer postNo);
 }
 
