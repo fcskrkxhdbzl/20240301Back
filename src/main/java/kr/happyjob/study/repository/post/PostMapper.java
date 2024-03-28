@@ -8,5 +8,5 @@ import kr.happyjob.study.vo.post.PostModel;
 
 @Mapper
 public interface PostMapper {
-	public PostModel postDetail(Map<String, Object> params) ;
+	public PostModel postDetail(String params) ;
 }
