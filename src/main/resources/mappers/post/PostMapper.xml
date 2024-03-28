@@ -53,16 +53,16 @@
 	
 	
 	<!-- 공지사항 단건 조회 : 공지제목 클릭시 -->
-	<select id = "postDetail" parameterType="java.util.Map"  resultType = "kr.happyjob.study.vo.post.PostModel">
+	<select id = "postDetail" parameterType="java.util.Map"  >
         /*kr.happyjob.study.repository.post.PostMapper.postDetail*/
 		SELECT
-					post_no
-				,	post_content
-				,	user_no
-				,   post_new_date
-				,   post_up_date
-		FROM	tb_post
-		WHERE post_no = #{postNo}
+					po.post_no as postNo
+				,	po.post_content as postContent
+				,	(select user.user_id from tb_user user where user.user_no = po.user_no) as userId
+				,   po.post_new_date as postNewDate
+				,   po.post_up_date as postUpDate
+		FROM	tb_post po
+		WHERE po.post_no = #{postNo}
 	</select>
 	
 		
