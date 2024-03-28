@@ -1,0 +1,174 @@
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.happyjob.study.repository.follow.FollowMapper">
+	
+	   	<!-- 팔로우 조회 -->
+	<select id = "followList" parameterType="java.util.Map" resultType = "kr.happyjob.study.vo.follow.FollowModel">
+        /*kr.happyjob.study.repository.follow.FollowMapper.followList*/
+		SELECT
+			   u.user_id  
+		  FROM tb_follow f 
+     left join tb_user u on f.follow_user_no = u.user_no 
+		 where f.follower_user_no = #{followNo}
+          
+	</select>
+	
+	<!-- 팔로워 조회 -->
+	<select id = "followerlist" parameterType="java.util.Map" resultType = "kr.happyjob.study.vo.follow.FollowModel">
+        /*kr.happyjob.study.repository.follow.FollowMapper.followerlist*/
+		SELECT
+			   u.user_id  
+		  FROM tb_follow f 
+     left join tb_user u on f.follower_user_no = u.user_no 
+		 where f.follow_user_no = #{followerNo}
+          
+	</select>	
+	
+	<!-- 팔로우 등록 : 팔로잉상태 -->
+	<insert id = "insertFollowing" parameterType="java.util.Map">
+		/*kr.happyjob.study.repository.follow.FollowMapper.insertFollowing*/
+	    <selectKey resultType="string" keyProperty="followNo" order="BEFORE">
+            SELECT IFNULL(MAX(follow_no),0) + 1 FROM tb_follow 
+        </selectKey> 
+		INSERT
+		INTO		tb_follow
+				(
+					follow_no, follower_user_no, follow_user_no, follow_new_date, follow_up_date
+				)
+		VALUES
+				(
+						#{followNo}
+					,	#{followerUNo}
+					,	#{followUNo}
+					,	NOW()
+					,	NOW()
+				)
+	</insert>
+		
+	<!-- 팔로우 삭제 -->
+	<delete id="deleteFollowing" parameterType="java.util.Map">
+		/*kr.happyjob.study.repository.follow.FollowMapper.deleteFollowing*/
+		DELETE
+		  FROM tb_follow
+		 WHERE follow_no = #{followNo}
+	</delete>
+	
+	<!-- //팔로우 여부 확인 조회 -->
+	<select id="checkFollowing" parameterType="java.util.Map"  resultType="boolean">
+		/*kr.happyjob.study.repository.follow.FollowMapper.checkFollowing*/
+	SELECT 
+	       CASE WHEN COUNT(*) > 0 THEN true ELSE false END AS following
+	  FROM tb_follow
+	 WHERE follow_user_no = #{followUNo}
+	   AND follower_user_no = #{followerUNo}
+	</select>	
+	
+   <!--	 공지사항 목록 조회 
+	<select id = "noticeList" parameterType="java.util.Map" resultType = "kr.happyjob.study.vo.notice.NoticeModel">
+        /*kr.happyjob.study.repository.notice.NoticeMapper.noticeList*/
+		SELECT
+				n.ntc_no as noticeNo
+			,	n.ntc_title as noticeTitle
+			,	DATE_FORMAT(n.ntc_regdate, '%Y-%m-%d') as noticeRegdate
+			,	u.loginID as loginId
+			,   u.name as loginName
+		FROM tb_notice n
+			LEFT JOIN	tb_userinfo u
+			ON			n.loginID = u.loginID
+		<where>
+			<if test ="(title != null) and (!title.equals(''))">
+			    and n.ntc_title  Like CONCAT('%', #{title}, '%')
+			</if>
+			<if test ="(from_date != null) and (!from_date.equals(''))">
+			    and n.ntc_regdate  <![CDATA[>=]]> STR_TO_DATE(#{from_date}, '%Y-%m-%d')   
+			</if>			
+			<if test ="(to_date != null) and (!to_date.equals(''))">
+			    and n.ntc_regdate  <![CDATA[<=]]> STR_TO_DATE(#{to_date}, '%Y-%m-%d')   
+			</if>		
+		</where>
+		 ORDER BY n.ntc_no DESC
+		 LIMIT #{pageIndex}, #{pageSize}
+	</select>
+	
+		
+	 공지사항 목록 총 갯수 조회 
+	<select id="noticeCnt" parameterType="java.util.Map"  resultType="int">
+		/*kr.happyjob.study.repository.notice.NoticeMapper.noticeCnt*/
+		SELECT COUNT(*)
+		FROM 	tb_notice
+		<where>
+			<if test ="(title != null) and (!title.equals(''))">
+			    and ntc_title  Like CONCAT('%', #{title}, '%')
+			</if>
+			<if test ="(from_date != null) and (!from_date.equals(''))">
+			    and ntc_regdate  <![CDATA[>=]]> STR_TO_DATE(#{from_date}, '%Y-%m-%d')   
+			</if>			
+			<if test ="(to_date != null) and (!to_date.equals(''))">
+			    and ntc_regdate  <![CDATA[<=]]> STR_TO_DATE(#{to_date}, '%Y-%m-%d')   
+			</if>		
+		</where>
+		ORDER BY ntc_no DESC
+	</select>	
+		
+	
+	
+	
+	 공지사항 단건 조회 : 공지제목 클릭시 
+	<select id = "noticeDetail" parameterType="java.util.Map"  resultType = "kr.happyjob.study.vo.notice.NoticeModel">
+        /*kr.happyjob.study.repository.notice.NoticeMapper.noticeDetail*/
+		SELECT
+					u.loginID as loginId
+				,	n.ntc_title as noticeTitle
+				,	n.ntc_content as noticeContent
+				,   n.ntc_no as noticeNo
+				,   u.name as loginName
+		FROM	tb_notice n
+			LEFT JOIN	tb_userinfo u
+			ON			n.loginID = u.loginID
+		WHERE n.ntc_no = #{noticeNo}
+	</select>
+	
+		
+		
+	 공지사항 신규등록(저장) :  
+	<insert id = "insertNotice" parameterType="java.util.Map">
+		/*kr.happyjob.study.repository.notice.NoticeMapper.insertNotice*/
+	    <selectKey resultType="string" keyProperty="noticeNo" order="BEFORE">
+            SELECT IFNULL(MAX(ntc_no),0) + 1 FROM tb_notice 
+        </selectKey> 
+		INSERT
+		INTO		tb_notice
+				(
+					ntc_no, loginID, ntc_title, ntc_content, ntc_regdate
+				)
+		VALUES
+				(
+						#{noticeNo}
+					,	#{loginId}
+					,	#{noticeTitle}
+					,	#{noticeContent}
+					,	NOW()
+				)
+	</insert>
+	
+	 공지사항 수정
+	<update id = "updateNotice" parameterType="java.util.Map">
+		/*kr.happyjob.study.repository.notice.NoticeMapper.updateNotice*/
+		UPDATE tb_notice
+		SET		ntc_title = #{noticeTitle}
+				,	ntc_content = #{noticeContent}
+				,	ntc_regdate = NOW()
+		WHERE	ntc_no = #{noticeNo}
+	</update>
+	
+	 공지사항 삭제
+	<delete id="deleteNotice" parameterType="java.util.Map">
+		/*kr.happyjob.study.repository.notice.NoticeMapper.deleteNotice*/
+		DELETE
+		FROM 	tb_notice
+		WHERE 	ntc_no = #{noticeNo}
+	</delete>-->
+   
+     
+     
+</mapper>
